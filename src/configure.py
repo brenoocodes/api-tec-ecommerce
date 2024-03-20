@@ -11,8 +11,10 @@ from fastapi import Depends
 from typing import Annotated
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+email = os.getenv('EMAIL')
+senha = os.getenv('SENHA')
 ALGORITHM = 'HS256'
-
+url = 'http://127.0.0.1:5000'
 app = FastAPI()
 
 router = APIRouter()

@@ -17,11 +17,15 @@ class Clientes(Base):
     nome = Column(String(120), nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     senha = Column(String(100), nullable=False)
+    confirmado = Column(Boolean, default=False)
+    ativo = Column(Boolean, default=True)
     data_criacao = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 
 class EmailToken(Base):
     __tablename__ = 'emailtoken'
     id = Column(Integer, unique=True, primary_key=True, nullable=False)
+    id_cliente = Column(Integer)
+    email = Column(String(50), nullable=False)
     token = Column(String(200), nullable=False)
     data_criacao = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 

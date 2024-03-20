@@ -1,3 +1,3 @@
-from datetime import datetime, timezone
+resposta = {'username': 'brenocodes@gmail.com', 'id': 1}
 
-print(datetime.now(timezone.utc))
+print(resposta['id'])
