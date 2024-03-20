@@ -1,5 +1,8 @@
 python -m venv venv
+pip install python-dotenv
 venv\Scripts\activate
 pip install fastapi
 pip install SQLAlchemy
 pip install pymysql
+pip install pydantic[email]
+pip install itsdangerous fastapi-mail
