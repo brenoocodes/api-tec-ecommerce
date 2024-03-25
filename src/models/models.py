@@ -22,6 +22,24 @@ class Clientes(Base):
     ativo = Column(Boolean, default=True)
     data_criacao = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 
+
+class Categorias(Base):
+    __tablename__ = 'categorias'
+    id = Column(Integer, unique=True, primary_key=True, nullable=False)
+    nome = Column(String(50), unique=True, nullable=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
 class EmailToken(Base):
     __tablename__ = 'emailtoken'
     id = Column(Integer, unique=True, primary_key=True, nullable=False)
