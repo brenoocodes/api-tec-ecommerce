@@ -9,6 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from fastapi import Depends
 from typing import Annotated
+from fastapi.templating import Jinja2Templates
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 email = os.getenv('EMAIL')
@@ -18,6 +19,7 @@ url = 'http://127.0.0.1:5000'
 app = FastAPI()
 
 router = APIRouter()
+templates = Jinja2Templates(directory="src/templates")
 
 SQL = os.getenv('SQL')
 engine = create_engine(SQL)

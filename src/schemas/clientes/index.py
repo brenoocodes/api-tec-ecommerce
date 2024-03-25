@@ -5,3 +5,4 @@ class Clientes(BaseModel):
     nome: str
     email: EmailStr
     senha: str
+    cpf: str

@@ -25,6 +25,5 @@ def enviar_email(ema, assunto, template, link):
     s.login(msg['From'], password)
     s.sendmail(msg['From'], recipients, msg.as_string().encode('utf-8'))
 
-    print('E-mail enviado')
 
 

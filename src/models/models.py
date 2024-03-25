@@ -14,10 +14,11 @@ from datetime import datetime, timezone
 class Clientes(Base):
     __tablename__ = 'clientes'
     id = Column(Integer, unique=True, primary_key=True, nullable=False)
+    cpf = Column(String(20), unique=True, nullable=False)
     nome = Column(String(120), nullable=False)
     email = Column(String(50), unique=True, nullable=False)
     senha = Column(String(100), nullable=False)
-    confirmado = Column(Boolean, default=False)
+    email_confirmado = Column(Boolean, default=False)
     ativo = Column(Boolean, default=True)
     data_criacao = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
 
@@ -28,6 +29,8 @@ class EmailToken(Base):
     email = Column(String(50), nullable=False)
     token = Column(String(200), nullable=False)
     data_criacao = Column(DateTime, nullable=False, default=datetime.now(timezone.utc))
+
+
 
 # Base.metadata.drop_all(bind=engine)
 # Base.metadata.create_all(bind=engine)

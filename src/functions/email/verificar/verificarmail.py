@@ -1,12 +1,10 @@
-from fastapi import FastAPI, HTTPException, Response, Depends
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 from src.configure import app, db_dependency, router, SECRET_KEY, url
 from src.models.models import Clientes, EmailToken
 from src.functions.email.enviar.send import enviar_email
 from src.functions.login.token import criar_token_acesso, verificar_login
-from urllib.parse import quote_plus
 
 verificador = OAuth2PasswordBearer(tokenUrl="token") 
 
@@ -23,7 +21,8 @@ async def verificar_email(email: str, db: db_dependency):
         novo_token = EmailToken(
             id_cliente = email_existente.id,
             email = email_existente.email,
-            token = token
+            token = token,
+            data_criacao = datetime.now(timezone.utc)
         )
         db.add(novo_token)
         db.commit()
@@ -38,7 +37,6 @@ async def confirmar_email(token: str, db: db_dependency):
         resposta = verificar_login(token=token)
         if 'username' in resposta:
             token_email = db.query(EmailToken).filter(EmailToken.id_cliente == resposta['id']).all()
-            print('passei token_email')
             if not token_email:
                 return {'mensagem': 'Algum erro na verificação dos tokens'}
             for token in token_email:
@@ -48,7 +46,7 @@ async def confirmar_email(token: str, db: db_dependency):
             print('Passei no cliente')
             if not cliente:
                 return {'mensagem': 'Algum erro na verificação dos tokens'}
-            cliente.confirmado = True
+            cliente.email_confirmado = True
             db.commit()
             return {'mensagem': 'Conta verificada com sucesso'}
         else:

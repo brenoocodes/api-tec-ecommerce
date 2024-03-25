@@ -6,3 +6,5 @@ pip install SQLAlchemy
 pip install pymysql
 pip install pydantic[email]
 pip install itsdangerous fastapi-mail
+pip install jinja2
+pip install python-multipart
