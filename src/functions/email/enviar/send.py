@@ -11,7 +11,7 @@ def enviar_email(ema, assunto, template, link):
     msg = email.message.Message()
     msg['Subject'] = assunto
     msg['From'] = 'bscbreno1904@gmail.com'
-    recipients = [ema, 'bscbreno1904@gmail.com']
+    recipients = ema
     msg['To'] = ', '.join(recipients)
 
     password = "zaxqpypgchmbsfwf"

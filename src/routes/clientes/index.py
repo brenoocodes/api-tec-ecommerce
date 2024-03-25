@@ -5,6 +5,17 @@ from src.models import models
 from src.schemas.clientes.index import Clientes
 from src.functions.login.senha import gerar_senha_criptografada
 from src.functions.email.verificar.verificarmail import verificar_email
+from src.functions.login.token import logado
+
+@router.get('/clientes', status_code=200)
+async def buscar_clientes(db: db_dependency, response: Response, logado: logado):
+    try:
+        clientes = db.query(models.Clientes).all()
+        return clientes
+    except Exception as e:
+        print(e)
+        response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        return {'mensagem': f'Erro de servidor {e}'}
 
 @router.post("/clientes", status_code=201)
 async def criar_cliente(db: db_dependency, cliente: Clientes, response: Response):

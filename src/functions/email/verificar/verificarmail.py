@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import FastAPI, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordBearer
 from datetime import timedelta, datetime, timezone
-from src.configure import app, db_dependency, router, SECRET_KEY, url
+from src.configure import app, db_dependency, router, SECRET_KEY, url, templates
 from src.models.models import Clientes, EmailToken
 from src.functions.email.enviar.send import enviar_email
 from src.functions.login.token import criar_token_acesso, verificar_login
@@ -32,7 +32,7 @@ async def verificar_email(email: str, db: db_dependency):
         raise HTTPException(status_code=500, detail=f"Erro de servidor: {e}")
 
 @router.get("/confirmar_email/{token}")
-async def confirmar_email(token: str, db: db_dependency):
+async def confirmar_email(token: str, db: db_dependency, request: Request):
     try:
         resposta = verificar_login(token=token)
         if 'username' in resposta:
@@ -55,7 +55,7 @@ async def confirmar_email(token: str, db: db_dependency):
 
     
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro de servidor: {e}")
+        return templates.TemplateResponse("tokeninspirada.html", {"request": request})
 
 app.include_router(router)
 

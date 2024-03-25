@@ -5,9 +5,8 @@ from pydantic import BaseModel
 from datetime import timedelta
 from src.configure import db_dependency, router, app
 from src.models.models import Clientes, EmailToken
-from typing import Annotated
 from src.functions.login.senha import *
-from src.functions.login.token import verificar_login, criar_token_acesso
+from src.functions.login.token import criar_token_acesso
 from src.functions.email.verificar.verificarmail import verificar_email
 
 class Login(BaseModel):
@@ -24,6 +23,10 @@ async def login(Login: Login, db: db_dependency, response: Response):
         if not cliente_existente:
             response.status_code = status.HTTP_404_NOT_FOUND
             return {'mensagem': 'Cliente ainda não cadastrado'}
+        if cliente_existente.ativo == False:
+            response.status_code = status.HTTP_401_UNAUTHORIZED
+            return {'mensagem': 'Esse cliente foi desativado'}
+        
         if verificar_senha(Login.password, cliente_existente.senha) == True:
             if cliente_existente.email_confirmado == False:
                 ultimo_token = db.query(EmailToken).filter(EmailToken.email == cliente_existente.email).order_by(desc(EmailToken.data_criacao)).first()
@@ -52,7 +55,7 @@ async def login(Login: Login, db: db_dependency, response: Response):
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {'mensagem': f'Erro de servidor {e}'}
 
-logado = Annotated[dict, Depends(verificar_login)]
+
 
 app.include_router(router)
 

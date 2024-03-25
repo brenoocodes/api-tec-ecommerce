@@ -34,13 +34,13 @@ async def verificar_token_de_mudanca_de_senha(token: str, request: Request):
         if 'username' in resposta:
             return templates.TemplateResponse("trocar_senha.html", {"request": request, "token": token})
         else:
-            raise HTTPException(status_code=404, detail="Token inválido ou expirado")
+            return templates.TemplateResponse("tokeninspirada.html", {"request": request})
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro de servidor: {e}")
+        return templates.TemplateResponse("tokeninspirada.html", {"request": request})
 
 @router.post("/trocar_senha/{token}", status_code=200)
-async def trocar_senha( db: db_dependency, response: Response, token: str, nova_senha: str = Form(...), confirmar_senha: str = Form(...)):
+async def trocar_senha( db: db_dependency, response: Response, request: Request, token: str, nova_senha: str = Form(...), confirmar_senha: str = Form(...)):
     try:
         if nova_senha != confirmar_senha:
             raise HTTPException(status_code=400, detail="As senhas não coincidem")
@@ -62,7 +62,7 @@ async def trocar_senha( db: db_dependency, response: Response, token: str, nova_
             db.commit()
             token_email = db.query(EmailToken).filter(EmailToken.id_cliente == resposta['id']).all()
             if not token_email:
-                return {'mensagem': 'Algum erro na verificação dos tokens'}
+                return templates.TemplateResponse("tokeninspirada.html", {"request": request})
             for token in token_email:
                 db.delete(token)
             db.commit()
@@ -71,7 +71,7 @@ async def trocar_senha( db: db_dependency, response: Response, token: str, nova_
         return {'mensagem': 'Cliente não encontrado'}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Erro de servidor: {e}")
+        return templates.TemplateResponse("tokeninspirada.html", {"request": request})
 
 app.include_router(router)
 
