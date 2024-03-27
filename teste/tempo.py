@@ -1,3 +1,4 @@
-resposta = {'username': 'brenocodes@gmail.com', 'id': 1}
+import uuid
 
-print(resposta['id'])
+
+print(uuid.uuid4())
