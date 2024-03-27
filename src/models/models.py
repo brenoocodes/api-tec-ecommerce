@@ -107,8 +107,6 @@ class ItensEstoque(Base):
     cor = Column(String(50), nullable=False)
     quantidade = Column(Integer, default=0)
     imagens = Column(JSON, nullable=True, default={})
-    
-
     itenscarrinho = relationship('ItensCarrinhos', backref='itemestoque', lazy=True, foreign_keys='ItensCarrinhos.itemestoque_id')
     itemvendas = relationship('ItensVendas', backref='itemestoque', lazy=True, foreign_keys='ItensVendas.itemestoque_id')
 
@@ -150,7 +148,7 @@ class Vendas(Base):
     __tablename__ = 'vendas'
     id = Column(String(36), default=str(uuid.uuid4()), primary_key=True, nullable=False)
     cliente_id = Column(String(36), ForeignKey('clientes.id'), nullable=False) 
-    endereco_id = Column(String(36), ForeignKey('enderecos.id'), nullable=False)
+    endereco_id = Column(String(36), ForeignKey('enderecos.id'), nullable=True)
     carrinho_id = Column(String(36), ForeignKey('carrinhos.id'), nullable=True)
     status = Column(String(50), nullable=False)
     link_pagamento = Column(String(200), nullable=True)
